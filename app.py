@@ -1,6 +1,6 @@
 from flask import Flask
 
-from extensions import api, base, db, scheduler
+from extensions import api, db, scheduler
 from resources import DepositAddress
 from settings import AppConfig
 
@@ -27,8 +27,11 @@ def register_extensions(app):
 
 
 def initialize_db():
-    base.metadata.drop_all(bind=db.engine)
-    base.metadata.create_all(bind=db.engine)
+    # Not great for a production system
+    # Good for a demo
+
+    db.drop_all()
+    db.create_all()
 
 
 app = create_app(AppConfig)

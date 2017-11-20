@@ -7,10 +7,10 @@
 '''
 
 from sqlalchemy import Column, String, Float
-from extensions import base
+from extensions import db
 
 
-class ProcessedTransaction(base):
+class ProcessedTransaction(db.Model):
     '''
         Transactions that have already been processed and added to the Creditor table
     '''
@@ -22,7 +22,7 @@ class ProcessedTransaction(base):
     timestamp = Column(String, primary_key=True)
 
 
-class Creditor(base):
+class Creditor(db.Model):
     '''
         The creditors table represents addresses that have paid money to the mixer.
     '''
@@ -32,7 +32,7 @@ class Creditor(base):
     amount = Column(Float)
 
 
-class CreditorDepositToPaymentAddress(base):
+class CreditorDepositToPaymentAddress(db.Model):
     '''
         The creditor to payment addresses table acts as a join table.
         This table will join a creditor_deposit_address (i.e. the address the mixer owns that a creditor will pay into)

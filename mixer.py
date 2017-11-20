@@ -100,7 +100,7 @@ def process_new_transaction(transaction):
         transfer_to_mixer_account(transaction.to_address, transaction.amount)
 
         amount_post_fee = extract_fee(transaction.amount)
-        creditor = db.session.query(Creditor.creditor_deposit_address == transaction.to_address).one()
+        creditor = Creditor.query.filter_by(creditor_deposit_address=transaction.to_address).first()
         if creditor:
             creditor.amount = creditor.amount + amount_post_fee
         else:
@@ -146,7 +146,7 @@ def repay_creditors():
         to_pay = amount_to_pay(creditor.amount)
         creditor.amount = creditor.amount - to_pay
 
-        deposit_addresses = db.session.query(CreditorDepositToPaymentAddress).all()
+        deposit_addresses = CreditorDepositToPaymentAddress.query.all()
         payment_address = random.choice(deposit_addresses).creditor_payment_address
 
         transfer_from_mixer_account(payment_address, to_pay)
