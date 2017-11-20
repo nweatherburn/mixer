@@ -1,6 +1,6 @@
 from urllib.parse import urljoin
 
-ADDRESS_LENGTH = 10
+ADDRESS_LENGTH = 20
 MIXER_ADDRESS = 'mixer_address'
 
 
@@ -11,7 +11,7 @@ JOBCOIN_ADDRESSES = urljoin(_JOBCOIN_ROOT, 'addresses/{addresses}')
 JOBCOIN_TRANSACTIONS = urljoin(_JOBCOIN_ROOT, 'transactions')
 
 
-class FlaskConfig(object):
+class AppConfig(object):
     """Configuration."""
     DEBUG = False
     JOBS = [
@@ -19,7 +19,7 @@ class FlaskConfig(object):
             'id': 'update_transactions',
             'func': 'tasks:update_transactions',
             'trigger': 'interval',
-            'seconds': 5
+            'seconds': 10
         },
         {
             'id': 'make_payments',

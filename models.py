@@ -43,6 +43,6 @@ class CreditorDepositToPaymentAddress(base):
         | a                        | c                        |    
     '''
     __tablename__ = 'creditor_deposit_to_payment_addresses'
-    creditor_deposit_address = Column(String, primary_key=True)
+    creditor_deposit_address = Column(String)
     creditor_payment_address = Column(String, primary_key=True)
 
