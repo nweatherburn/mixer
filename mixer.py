@@ -135,7 +135,7 @@ def amount_to_pay(amount):
     #  randomness for this.
     
     payment_percent = round(random.uniform(0.1, 0.3), 2)
-    to_pay = round(amount * payment_percent, 2)
+    to_pay = min(1, round(amount * payment_percent, 2))
     return to_pay
 
 
