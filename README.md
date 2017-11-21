@@ -8,9 +8,9 @@ Supported Language: >Python3.6
 
 The majority of the work happens in `mixer.py` and `jobs.py`. 
 Database object definitions are stored in `models.py`.
-Relevant settings are in 
+Relevant settings are in `settings.py`. 
 
-## Setup
+## Setup and Test
 
 1. Make sure that mixer_address has at least 50 jobcoin.
 2. _(optional)_ Create a virtualenv environment with python3. 
