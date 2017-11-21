@@ -1,13 +1,17 @@
 # Welcome to my JobCoin implementation!
 
 Author: Nick Weatherburn
+
 Date: 21/11/2017
+
 Supported Language: Python >3.6
 
 ## Blurb
 
 The majority of the work happens in `mixer.py` and `jobs.py`. 
+
 Database object definitions are stored in `models.py`.
+
 Relevant settings are in `settings.py`. 
 
 ## Setup and Test
