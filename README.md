@@ -2,7 +2,7 @@
 
 Author: Nick Weatherburn
 Date: 21/11/2017
-Supported Language: >Python3.6
+Supported Language: Python >3.6
 
 ## Blurb
 
@@ -13,10 +13,10 @@ Relevant settings are in `settings.py`.
 ## Setup and Test
 
 1. Make sure that mixer_address has at least 50 jobcoin.
-2. _(optional)_ Create a virtualenv environment with python3. 
+2. _(optional)_ Create a virtualenv environment with Python 3. 
     `virtualenv env -p python3`
     `source env/bin/activate`
-    Confirm that `python --version` is a version of python >3.6
+    Confirm that `python --version` is a version of Python >3.6
 3. `pip install -r requirements.txt`
 4. `python jobcoin.py`
 5. _(In a separate environment)_ `python run_test.py`
