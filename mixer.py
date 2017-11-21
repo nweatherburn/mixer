@@ -2,12 +2,23 @@ from models import Creditor, CreditorDepositToPaymentAddress, ProcessedTransacti
 from extensions import db
 from settings import ADDRESS_LENGTH, MIXER_ADDRESS, JOBCOIN_ADDRESSES, JOBCOIN_TRANSACTIONS
 
+from decimal import Decimal
 import random
 import requests
 import string
 import sqlite3
 from sqlalchemy.sql import exists
 from sqlalchemy.exc import IntegrityError
+
+
+def add_decimal_strings(a, b):
+    ''' Returns a + b as a String '''
+    return str(Decimal(a) + Decimal(b))
+
+
+def subtract_decimal_strings(a, b):
+    ''' Returns a - b as a String '''
+    return str(Decimal(a) - Decimal(b))
 
 
 def get_new_deposit_address():
@@ -102,7 +113,7 @@ def process_new_transaction(transaction):
         amount_post_fee = extract_fee(transaction.amount)
         creditor = Creditor.query.filter_by(creditor_deposit_address=transaction.to_address).first()
         if creditor:
-            creditor.amount = creditor.amount + amount_post_fee
+            creditor.amount = add_decimal_strings(creditor.amount, amount_post_fee)
         else:
             creditor = Creditor(creditor_deposit_address=transaction.to_address, amount=transaction.amount)
             db.session.add(creditor)
@@ -112,6 +123,9 @@ def process_new_transaction(transaction):
 
 
 def process_transaction(to_address, from_address, amount, timestamp):
+    '''
+        If a transaction hasn't been seen before, will process that transaction as new.
+    '''
     transaction = ProcessedTransaction(to_address=to_address, from_address=from_address, amount=amount, timestamp=timestamp)
 
     if is_new_transaction(transaction):
@@ -122,31 +136,46 @@ def amount_to_pay(amount):
     '''
         Takes the amount owing to a creditor 
         and decides how much to pay them this payment round.
+
+        Returns the amount to pay as a String.
     '''
+
+    amount = Decimal(amount)
+    if amount <= 0:
+        return None
+
     if amount <= 1:
-        return amount
+        return str(amount)
     
-    # Pay between 10% and 30% of the remaining balance.
+    # Pay between 20% and 50% of the remaining balance.
     # Round payments to two decimal places.
-    # Assuming there are 21million potential job coins 
+    # Assuming there are 21 million potential job coins 
     #  and a payment round happens every 30 seconds then this mixer will
-    #  take at most 80 minutes to pay back.
+    #  take at most 38 minutes to pay back.
     #  Definitely not a productionizable algorithm but it introduces enough
     #  randomness for this.
     
-    payment_percent = round(random.uniform(0.1, 0.3), 2)
-    to_pay = min(1, round(amount * payment_percent, 2))
-    return to_pay
+    payment_percent = Decimal(round(random.uniform(0.2, 0.5), 2))
+    to_pay = max(1, round(amount * payment_percent, 2))
+    return str(to_pay)
 
 
 
 def repay_creditors():
+    '''
+        Repay a portion of outstanding debt to creditors.
+    '''
     creditors = db.session.query(Creditor).all()
     for creditor in creditors:
         to_pay = amount_to_pay(creditor.amount)
-        creditor.amount = creditor.amount - to_pay
+        if not to_pay:
+            continue
 
-        deposit_addresses = CreditorDepositToPaymentAddress.query.all()
+        creditor.amount = subtract_decimal_strings(creditor.amount, to_pay)
+
+        deposit_addresses = CreditorDepositToPaymentAddress.query.filter_by(
+                                creditor_deposit_address=creditor.creditor_deposit_address
+                            ).all()
         payment_address = random.choice(deposit_addresses).creditor_payment_address
 
         transfer_from_mixer_account(payment_address, to_pay)

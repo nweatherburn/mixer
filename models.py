@@ -6,7 +6,7 @@
     Models for ORM
 '''
 
-from sqlalchemy import Column, String, Float
+from sqlalchemy import Column, String
 from extensions import db
 
 
@@ -18,7 +18,7 @@ class ProcessedTransaction(db.Model):
 
     to_address = Column(String, primary_key=True)
     from_address = Column(String)
-    amount = Column(Float, primary_key=True)
+    amount = Column(String, primary_key=True)
     timestamp = Column(String, primary_key=True)
 
 
@@ -29,7 +29,7 @@ class Creditor(db.Model):
     __tablename__ = 'creditors'
 
     creditor_deposit_address = Column(String, primary_key=True)
-    amount = Column(Float)
+    amount = Column(String)
 
 
 class CreditorDepositToPaymentAddress(db.Model):

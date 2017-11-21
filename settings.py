@@ -3,7 +3,6 @@ from urllib.parse import urljoin
 ADDRESS_LENGTH = 20
 MIXER_ADDRESS = 'mixer_address'
 
-
 # Jobcoin Endpoints
 _JOBCOIN_ROOT = 'http://jobcoin.gemini.com/tremble/api/'
 

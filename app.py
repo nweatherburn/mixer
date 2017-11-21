@@ -29,7 +29,6 @@ def register_extensions(app):
 def initialize_db():
     # Not great for a production system
     # Good for a demo
-
     db.drop_all()
     db.create_all()
 
