@@ -11,7 +11,7 @@ JOBCOIN_TRANSACTIONS = urljoin(_JOBCOIN_ROOT, 'transactions')
 
 
 class AppConfig(object):
-    """Configuration."""
+    '''Configuration.'''
     DEBUG = False
     JOBS = [
         {
